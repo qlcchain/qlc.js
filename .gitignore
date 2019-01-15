@@ -242,4 +242,8 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+docs/*
+dist/*
+.rpt2_cache
+
 # End of https://www.gitignore.io/api/node,linux,macos,windows,jetbrains,visualstudiocode
