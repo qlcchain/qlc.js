@@ -3,8 +3,8 @@
   "version": "0.0.0-development",
   "description": "QLC Chain Javascript API",
   "keywords": [],
-  "main": "dist/qlcjs.umd.js",
-  "module": "dist/qlcjs.es5.js",
+  "main": "dist/qlcjs/qlcjs.umd.js",
+  "module": "dist/qlcjs/qlcjs.es5.js",
   "typings": "dist/types/qlcjs.d.ts",
   "files": [
     "dist"
@@ -12,7 +12,7 @@
   "author": "QLC Chain Team <admin@qlink.mobi>",
   "repository": {
     "type": "git",
-    "url": "https://github.com/qlcchain/qlc.js"
+    "url": "git+https://github.com/qlcchain/qlc.js"
   },
   "license": "MIT",
   "engines": {
@@ -115,5 +115,8 @@
     "typedoc": "^0.12.0",
     "typescript": "^3.0.3",
     "travis-deploy-once": "^5.0.9"
+  },
+  "dependencies": {
+    "jsonrpc-lite": "^2.0.2"
   }
 }

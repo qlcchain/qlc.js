@@ -7,6 +7,8 @@
     "strict": true,
     "sourceMap": true,
     "declaration": true,
+    "noImplicitAny": false,
+    "removeComments": true,
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
@@ -14,9 +16,17 @@
     "outDir": "dist/lib",
     "typeRoots": [
       "node_modules/@types"
-    ]
+    ],
+    "baseUrl": "./src",
+    "paths": {
+      "provider": ["./provider"]
+    },
   },
   "include": [
-    "src"
+    "src/**/*.ts"
+  ],
+  "exclude": [
+      "node_modules",
+      "**/*.spec.ts"
   ]
 }
