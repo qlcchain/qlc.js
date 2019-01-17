@@ -2,7 +2,7 @@
 
 QLC Chain JavaScript API
 
-[![Build Status](https://travis-ci.com/qlcchain/qlc.js.svg?branch=master)](https://travis-ci.com/qlcchain/qlc.js)
+[![Build Status](https://travis-ci.com/qlcchain/qlc.js.svg?branch=master)](https://travis-ci.com/qlcchain/qlc.js) [![Coverage Status](https://coveralls.io/repos/github/qlcchain/qlc.js/badge.svg)](https://coveralls.io/github/qlcchain/qlc.js)
 
 ## NPM scripts
 
