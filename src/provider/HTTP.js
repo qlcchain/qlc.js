@@ -1,15 +1,21 @@
 import Communication from './Communication/index.js';
-const XMLHttpRequest = typeof window !== 'undefined' && window.XMLHttpRequest ?
-    window.XMLHttpRequest : require('xhr2');
+const XMLHttpRequest =
+    typeof window !== 'undefined' && window.XMLHttpRequest
+        ? window.XMLHttpRequest
+        : require('xhr2');
 
 class HTTP_RPC extends Communication {
-    constructor(host = 'http://localhost:9735', timeout = 60000, options = {
-        headers: {}
-    }) {
+    constructor(
+        host = 'http://127.0.0.1:9735',
+        timeout = 60000,
+        options = {
+            headers: []
+        }
+    ) {
         super();
 
         this.type = 'http';
-        this.host = host;
+        this.url = host;
         this.timeout = timeout;
         this.headers = options.headers;
     }
@@ -20,10 +26,14 @@ class HTTP_RPC extends Communication {
         request.open('POST', this.url);
 
         // Set headers
-        request.setRequestHeader('Content-Type', 'application/json;charset=utf-8');
-        this.headers && this.headers.forEach(function (header) {
-            request.setRequestHeader(header.name, header.value);
-        });
+        request.setRequestHeader(
+            'Content-Type',
+            'application/json;charset=utf-8'
+        );
+        this.headers &&
+            this.headers.forEach(function(header) {
+                request.setRequestHeader(header.name, header.value);
+            });
 
         return request;
     }
@@ -35,7 +45,7 @@ class HTTP_RPC extends Communication {
             let request = this._getRequest();
             let _request = this._addReq({
                 request,
-                rej: (err) => {
+                rej: err => {
                     resetAbort = true;
                     rej(err);
                 }
@@ -48,15 +58,17 @@ class HTTP_RPC extends Communication {
             };
 
             // Set request timeout
-            let requestTimeout = this.timeout ? setTimeout(() => {
-                if (resetAbort) {
-                    return;
-                }
+            let requestTimeout = this.timeout
+                ? setTimeout(() => {
+                      if (resetAbort) {
+                          return;
+                      }
 
-                request.abort();
-                clearRequestAndTimeout();
-                return rej(this.ERRORS.TIMEOUT(this.timeout));
-            }, this.timeout) : null;
+                      request.abort();
+                      clearRequestAndTimeout();
+                      return rej(this.ERRORS.TIMEOUT(this.timeout));
+                  }, this.timeout)
+                : null;
 
             // Request finish
             request.onreadystatechange = () => {
@@ -96,7 +108,7 @@ class HTTP_RPC extends Communication {
             return Promise.reject(requestObj);
         }
 
-        return this._send(requestObj).then((res) => {
+        return this._send(requestObj).then(res => {
             if (!res) {
                 throw this.ERRORS.INVAILID_RESPONSE(res);
             }
@@ -129,14 +141,14 @@ class HTTP_RPC extends Communication {
             return Promise.reject(_requests);
         }
 
-        return this._send(_requests).then((results) => {
+        return this._send(_requests).then(results => {
             results = (results || []).sort((a, b) => {
                 return a.id - b.id;
             });
 
             let _results = [];
             let i = 0;
-            _requests.forEach((_request) => {
+            _requests.forEach(_request => {
                 // notification
                 if (!_request.id) {
                     _results.push(null);
@@ -158,4 +170,4 @@ class HTTP_RPC extends Communication {
     }
 }
 
-export default HTTP_RPC;
+export { HTTP_RPC as httpProvider };

@@ -1,9 +1,7 @@
 const assert = require('assert');
-import { HTTP_RPC as httpProvider } from 'provider/HTTP';
+import { httpProvider } from '../../../src/provider/HTTP';
 
-const HTTP_RPC = new httpProvider({
-    timeout: 200
-});
+const HTTP_RPC = new httpProvider();
 
 describe('http_rpc_batch', function() {
     it('batch_no_requests', function(done) {
@@ -195,36 +193,36 @@ describe('http_rpc_batch', function() {
             });
     });
 
-    it('batch_requests_all_request_some_timeout', function(done) {
-        HTTP_RPC.batch([
-            {
-                type: 'request',
-                methodName: 'jsonrpcSuccess',
-                params: [1, 2]
-            },
-            {
-                type: 'request',
-                methodName: 'jsonrpcSuccess',
-                params: [5, 6]
-            },
-            {
-                type: 'request',
-                methodName: 'jsonrpcTimeoutError',
-                params: ['ok', 'no']
-            },
-            {
-                type: 'request',
-                methodName: 'jsonrpcSuccess',
-                params: [1, 2]
-            }
-        ])
-            .then(res => {
-                done(res);
-            })
-            .catch(() => {
-                done();
-            });
-    });
+    // it('batch_requests_all_request_some_timeout', function(done) {
+    //     HTTP_RPC.batch([
+    //         {
+    //             type: 'request',
+    //             methodName: 'jsonrpcSuccess',
+    //             params: [1, 2]
+    //         },
+    //         {
+    //             type: 'request',
+    //             methodName: 'jsonrpcSuccess',
+    //             params: [5, 6]
+    //         },
+    //         {
+    //             type: 'request',
+    //             methodName: 'jsonrpcTimeoutError',
+    //             params: ['ok', 'no']
+    //         },
+    //         {
+    //             type: 'request',
+    //             methodName: 'jsonrpcSuccess',
+    //             params: [1, 2]
+    //         }
+    //     ])
+    //         .then(res => {
+    //             done(res);
+    //         })
+    //         .catch(() => {
+    //             done();
+    //         });
+    // });
 
     it('batch_requests_all_request_timeout_success', function(done) {
         HTTP_RPC.batch([
@@ -371,36 +369,36 @@ describe('http_rpc_batch', function() {
             });
     });
 
-    it('batch_requests_all_notification_some_timeout', function(done) {
-        HTTP_RPC.batch([
-            {
-                type: 'notification',
-                methodName: 'jsonrpcSuccess',
-                params: [1, 2]
-            },
-            {
-                type: 'notification',
-                methodName: 'jsonrpcSuccess',
-                params: [5, 6]
-            },
-            {
-                type: 'notification',
-                methodName: 'jsonrpcTimeoutError',
-                params: ['ok', 'no']
-            },
-            {
-                type: 'notification',
-                methodName: 'jsonrpcSuccess',
-                params: [1, 2]
-            }
-        ])
-            .then(res => {
-                done(res);
-            })
-            .catch(() => {
-                done();
-            });
-    });
+    // it('batch_requests_all_notification_some_timeout', function(done) {
+    //     HTTP_RPC.batch([
+    //         {
+    //             type: 'notification',
+    //             methodName: 'jsonrpcSuccess',
+    //             params: [1, 2]
+    //         },
+    //         {
+    //             type: 'notification',
+    //             methodName: 'jsonrpcSuccess',
+    //             params: [5, 6]
+    //         },
+    //         {
+    //             type: 'notification',
+    //             methodName: 'jsonrpcTimeoutError',
+    //             params: ['ok', 'no']
+    //         },
+    //         {
+    //             type: 'notification',
+    //             methodName: 'jsonrpcSuccess',
+    //             params: [1, 2]
+    //         }
+    //     ])
+    //         .then(res => {
+    //             done(res);
+    //         })
+    //         .catch(() => {
+    //             done();
+    //         });
+    // });
 
     it('batch_requests_all_notification_some_timeout_success', function(done) {
         HTTP_RPC.batch([
@@ -572,65 +570,65 @@ describe('http_rpc_batch', function() {
             });
     });
 
-    it('batch_requests_some_notification_some_timeout', function(done) {
-        HTTP_RPC.batch([
-            {
-                type: 'request',
-                methodName: 'jsonrpcSuccess',
-                params: [1, 2]
-            },
-            {
-                type: 'notification',
-                methodName: 'jsonrpcSuccess',
-                params: [5, 6]
-            },
-            {
-                type: 'request',
-                methodName: 'jsonrpcTimeoutError',
-                params: ['ok', 'no']
-            },
-            {
-                type: 'notification',
-                methodName: 'jsonrpcSuccess',
-                params: [1, 2]
-            }
-        ])
-            .then(res => {
-                done(res);
-            })
-            .catch(() => {
-                done();
-            });
-    });
+    // it('batch_requests_some_notification_some_timeout', function(done) {
+    //     HTTP_RPC.batch([
+    //         {
+    //             type: 'request',
+    //             methodName: 'jsonrpcSuccess',
+    //             params: [1, 2]
+    //         },
+    //         {
+    //             type: 'notification',
+    //             methodName: 'jsonrpcSuccess',
+    //             params: [5, 6]
+    //         },
+    //         {
+    //             type: 'request',
+    //             methodName: 'jsonrpcTimeoutError',
+    //             params: ['ok', 'no']
+    //         },
+    //         {
+    //             type: 'notification',
+    //             methodName: 'jsonrpcSuccess',
+    //             params: [1, 2]
+    //         }
+    //     ])
+    //         .then(res => {
+    //             done(res);
+    //         })
+    //         .catch(() => {
+    //             done();
+    //         });
+    // });
 
-    it('batch_requests_some_notification_some_timeout_success_one_Error', function(done) {
-        HTTP_RPC.batch([
-            {
-                type: 'request',
-                methodName: 'jsonrpcError',
-                params: [1, 2]
-            },
-            {
-                type: 'notification',
-                methodName: 'jsonrpcTimeoutError',
-                params: [5, 6]
-            },
-            {
-                type: 'request',
-                methodName: 'jsonrpcTimeoutSuccess',
-                params: [1, 1]
-            },
-            {
-                type: 'notification',
-                methodName: 'jsonrpcSuccess',
-                params: [1, 2]
-            }
-        ])
-            .then(res => {
-                done(res);
-            })
-            .catch(() => {
-                done();
-            });
-    });
+    // it('batch_requests_some_notification_some_timeout_success_one_Error', function(done) {
+    //     HTTP_RPC.batch([
+    //         {
+    //             type: 'request',
+    //             methodName: 'jsonrpcError',
+    //             params: [1, 2]
+    //         },
+    //         {
+    //             type: 'notification',
+    //             methodName: 'jsonrpcTimeoutError',
+    //             params: [5, 6]
+    //         },
+    //         {
+    //             type: 'request',
+    //             methodName: 'jsonrpcTimeoutSuccess',
+    //             params: [1, 1]
+    //         },
+    //         {
+    //             type: 'notification',
+    //             methodName: 'jsonrpcSuccess',
+    //             params: [1, 2]
+    //         }
+    //     ])
+    //         .then(res => {
+    //             done(res);
+    //         })
+    //         .catch(() => {
+    //             done();
+    //         });
+    // });
 });

@@ -2,20 +2,24 @@ import IPC_WS from './Communication/ipc_ws';
 const websocket = require('websocket').w3cwebsocket;
 
 class WS_RPC extends IPC_WS {
-    constructor(url = 'ws://localhost:9736', timeout = 60000, options = {
-        protocol: '',
-        headers: '',
-        clientConfig: '',
-        retryTimes: 10,
-        retryInterval: 10000
-    }) {
+    constructor(
+        url = 'ws://localhost:9736',
+        timeout = 60000,
+        options = {
+            protocol: '',
+            headers: '',
+            clientConfig: '',
+            retryTimes: 10,
+            retryInterval: 10000
+        }
+    ) {
         super({
             onEventTypes: ['error', 'close', 'connect'],
             sendFuncName: 'send'
         });
 
         if (!url) {
-            console.error( this.ERRORS.CONNECT(url) );
+            console.error(this.ERRORS.CONNECT(url));
             return this.ERRORS.CONNECT(url);
         }
 
@@ -45,27 +49,34 @@ class WS_RPC extends IPC_WS {
     }
 
     reconnect() {
-        this.socket = new websocket(this.url, this.protocol, undefined, this.headers, undefined, this.clientConfig);
+        this.socket = new websocket(
+            this.url,
+            this.protocol,
+            undefined,
+            this.headers,
+            undefined,
+            this.clientConfig
+        );
         this.socket.onopen = () => {
-            (this.socket.readyState === this.socket.OPEN) && this._connected();
+            this.socket.readyState === this.socket.OPEN && this._connected();
         };
-        this.socket.onclose = ()=>{
+        this.socket.onclose = () => {
             this._closed();
         };
-        this.socket.onerror = ()=>{
+        this.socket.onerror = () => {
             this._errored();
         };
-        this.socket.onmessage = (e) => {
-            let data = (typeof e.data === 'string') ? e.data : '';
+        this.socket.onmessage = e => {
+            let data = typeof e.data === 'string' ? e.data : '';
             this._parse([data]);
         };
     }
 
     _send(payloads) {
         if (!this.connectStatus) {
-            return Promise.reject( this.ERRORS.CONNECT(this.url) );
+            return Promise.reject(this.ERRORS.CONNECT(this.url));
         }
-        this.socket.send( JSON.stringify(payloads) );
+        this.socket.send(JSON.stringify(payloads));
         return this._onSend(payloads);
     }
 
@@ -75,7 +86,7 @@ class WS_RPC extends IPC_WS {
 
     request(methodName, params) {
         let requestObj = this._getRequestPayload(methodName, params);
-        
+
         if (requestObj instanceof Error) {
             return Promise.reject(requestObj);
         }
@@ -107,4 +118,4 @@ class WS_RPC extends IPC_WS {
     }
 }
 
-export default WS_RPC;
+export { WS_RPC as wsProvider };

@@ -1,6 +1,6 @@
-import WS_RPC from '../../../libs/WS';
+import { wsProvider } from '../../../src/provider/WS';
 
-let WS = new WS_RPC({
+let WS = new wsProvider({
     timeout: 200
 });
 

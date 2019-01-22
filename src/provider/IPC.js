@@ -2,18 +2,29 @@ import IPC_WS from './Communication/ipc_ws';
 const net = require('net');
 
 class IPC_RPC extends IPC_WS {
-    constructor(path = '', timeout = 60000, options = {
-        delimiter: '\n',
-        retryTimes: 10,
-        retryInterval: 10000
-    }) {
+    constructor(
+        path = '',
+        timeout = 60000,
+        options = {
+            delimiter: '\n',
+            retryTimes: 10,
+            retryInterval: 10000
+        }
+    ) {
         super({
-            onEventTypes: ['error', 'end', 'timeout', 'data', 'close', 'connect'],
+            onEventTypes: [
+                'error',
+                'end',
+                'timeout',
+                'data',
+                'close',
+                'connect'
+            ],
             sendFuncName: 'write'
         });
 
         if (!path) {
-            console.error( this.ERRORS.CONNECT() );
+            console.error(this.ERRORS.CONNECT());
             return this.ERRORS.CONNECT();
         }
 
@@ -25,12 +36,12 @@ class IPC_RPC extends IPC_WS {
         // Try to reconnect.
         let times = 0;
         this.socket = net.connect({ path });
-        
-        this.socket.on('connect', ()=>{
+
+        this.socket.on('connect', () => {
             times = 0;
             this._connected();
         });
-        this.socket.on('close', ()=>{
+        this.socket.on('close', () => {
             this._closed();
             if (times > options.retryTimes) {
                 return;
@@ -40,37 +51,40 @@ class IPC_RPC extends IPC_WS {
                 this.reconnect();
             }, options.retryInterval);
         });
-        this.socket.on('error', ()=>{
+        this.socket.on('error', () => {
             this._errored();
         });
-        this.socket.on('end', (err) => {
+        this.socket.on('end', err => {
             this._connectEnd && this._connectEnd(err);
         });
-        this.socket.on('timeout', (err) => {
+        this.socket.on('timeout', err => {
             this._connectTimeout && this._connectTimeout(err);
         });
 
         let ipcBuffer = '';
-        this.socket.on('data', (data) => {
+        this.socket.on('data', data => {
             data = data ? data.toString() : '';
-            if (data.slice(-1) !== this.delimiter || data.indexOf(this.delimiter) === -1) {
+            if (
+                data.slice(-1) !== this.delimiter ||
+                data.indexOf(this.delimiter) === -1
+            ) {
                 ipcBuffer += data;
                 return;
             }
-    
+
             data = ipcBuffer + data;
             ipcBuffer = '';
             data = data.split(this.delimiter);
-    
+
             this._parse(data);
         });
     }
 
     _send(payloads) {
         if (!this.connectStatus) {
-            return Promise.reject( this.ERRORS.CONNECT(this.path) );
+            return Promise.reject(this.ERRORS.CONNECT(this.path));
         }
-        this.socket.write( JSON.stringify(payloads) );
+        this.socket.write(JSON.stringify(payloads));
         return this._onSend(payloads);
     }
 
@@ -116,4 +130,4 @@ class IPC_RPC extends IPC_WS {
     }
 }
 
-export default IPC_RPC;
+export { IPC_RPC as ipcProvider};
