@@ -40,5 +40,5 @@ export function checkParams(params, requiredP:Array<string> = [], validFunc:Arra
 }
 
 export function isValidHexAddr(hexAddr: Address): boolean {
-  return false;
+  return true;
 }

@@ -1,5 +1,5 @@
 const assert = require('assert');
-import httpProvider from 'provider/HTTP_RPC';
+import { HTTP_RPC as httpProvider } from 'provider/HTTP_RPC';
 
 const HTTP_RPC = new httpProvider({
     timeout: 200

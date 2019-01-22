@@ -2,7 +2,7 @@ const assert = require('assert');
 import ipcProvider from 'provider/IPC_RPC';
 
 const IPC_RPC = new ipcProvider({
-    path: '/Users/sisi/viteisbest/vite.ipc',
+    path: '~/gqlc.ipc',
     timeout: 200
 });
 

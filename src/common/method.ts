@@ -1,8 +1,6 @@
-import { type } from 'os'
-
 export const enum account {
-  accountsBalances = 'account_accountsBalances',
-  accountsPending = 'account_accountsPending'
+  accountCreate = 'account_create',
+  accountForPublicKey = 'account_forPublicKey'
 }
 
 export const enum ledger {
@@ -11,22 +9,49 @@ export const enum ledger {
 }
 
 export const enum wallet {
-  createAccount = 'wallet_createAccount'
+  getBalance = 'wallet_getBalance',
+  getRawKey = 'wallet_getRawKey'
+}
+
+export const enum qlcclassic {
+  accountsFrontiers = 'qlcclassic_accountsFrontiers',
+  accountsBalances = 'qlcclassic_accountsBalances',
+  accountHistoryTopn = 'qlcclassic_accountHistoryTopn',
+  accountsPending = 'qlcclassic_accountsPending',
+  accountInfo = 'qlcclassic_accountInfo',
+  validateAccount = 'qlcclassic_validateAccount',
+  blocksInfo = 'qlcclassic_blocksInfo',
+  process = 'qlcclassic_process',
+  tokens = 'qlcclassic_tokens',
+  onlineRepresentatives = 'qlcclassic_getOnlineRepresentatives'
 }
 
 export type accountFun = {
-  accountsBalances: Function
-  accountsPending: Function
-}
+  accountsBalances: Function;
+  accountsPending: Function;
+};
 
 export type ledgerFun = {
-  processFun: Function
-}
+  processFun: Function;
+};
 
 export type walletFun = {
-  createAccount: Function
-}
+  createAccount: Function;
+};
 
-type methods = account | ledger | wallet
+export type qlcclassicFun = {
+  accountsFrontiers: Function;
+  accountsBalances: Function;
+  accountHistoryTopn: Function;
+  accountsPending: Function;
+  accountInfo: Function;
+  validateAccount: Function;
+  blocksInfo: Function;
+  process: Function;
+  tokens: Function;
+  onlineRepresentatives: Function;
+};
 
-export default methods
+type methods = account | ledger | wallet | qlcclassic;
+
+export default methods;
