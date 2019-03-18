@@ -1,6 +1,6 @@
-import { ledger as _ledger } from 'common/method';
-import { RPCresponse, RPCrequest, Address } from 'common/type';
-import { checkParams, isValidHexAddr } from 'utils/tools';
+import { ledger as _ledger } from '../common/method';
+import { RPCresponse, RPCrequest, Address } from '../common/type';
+import { checkParams, isValidHexAddr } from '../utils/tools';
 import Client from '.';
 
 export default class Ledger {

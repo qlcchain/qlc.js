@@ -1,13 +1,17 @@
-import * as _methods from 'common/method';
+import * as _methods from '../common/method';
 import { RPCrequest, RPCresponse, Methods } from '../common/type';
 import Ledger from './ledger';
 
 export default class Client {
     _provider: any;
     buildinLedger: Ledger;
-    account: _methods.accountFun;
-    ledger: _methods.ledgerFun;
-    wallet: _methods.walletFun;
+    account: _methods.account;
+    ledger: _methods.ledger;
+    wallet: _methods.wallet;
+    mintage: _methods.mintage;
+    sms: _methods.sms;
+    net: _methods.net;
+    util: _methods.util;
     qlcclassic: _methods.qlcclassic;
 
     constructor(provider: any, firstConnect: Function) {
@@ -32,7 +36,7 @@ export default class Client {
     _setMethodsName() {
         let providerType = (this._provider.type || 'http').toLowerCase();
         for (let namespace in _methods) {
-            console.log(namespace);
+            //console.log(namespace);
             if (providerType === 'ipc' && namespace === 'wallet') {
                 this.wallet = undefined;
                 continue;

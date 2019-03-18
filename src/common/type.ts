@@ -1,4 +1,4 @@
-import methods from "common/method";
+import methods from "../common/method";
 export declare type Hash = string
 export declare type Address = string
 export declare type Int64 = number

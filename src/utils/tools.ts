@@ -1,5 +1,5 @@
-import { paramsMissing, paramsFormat } from "common/error";
-import { Address } from "common/type";
+import { paramsMissing, paramsFormat } from "../common/error";
+import { Address } from "../common/type";
 
 export function checkParams(params, requiredP:Array<string> = [], validFunc:Array<{ name, func, msg? }> =[]) {
     if (!params) {
