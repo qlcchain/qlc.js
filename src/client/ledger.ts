@@ -1,10 +1,14 @@
 import { ledger as _ledger } from '../common/method';
+import { account as _account } from '../common/method';
 import { RPCresponse, RPCrequest, Address } from '../common/type';
 import { checkParams, isValidHexAddr } from '../utils/tools';
+import { BigNumber } from 'bignumber.js';
 import Client from '.';
 
 export default class Ledger {
     _client: Client;
+
+    zeroHash = '0000000000000000000000000000000000000000000000000000000000000000';
 
     constructor(client) {
         this._client = client;
@@ -40,5 +44,78 @@ export default class Ledger {
             balance: data[0].result,
             onroad: data[1].result
         };
+    }
+
+    async generateSendBlock(sendBlock) {
+        const accountFrom = await this._client.request(_ledger.accountInfo,sendBlock.from);
+        const tokens = accountFrom.result.tokens;
+        const token = await this._client.request(_ledger.tokenInfoByName,sendBlock.tokenName);
+		const fromTokens = Array.isArray(tokens) ? tokens.filter(tokenMeta => tokenMeta.type === token.result.tokenId)[0] : null;
+        const link = await this._client.request(_account.accountPublicKey,sendBlock.to);
+        const remainingDecimal = new BigNumber(fromTokens.balance).minus(sendBlock.amount).toString(10);
+        const blockData = {
+			type: 'Send',
+			token: token.result.tokenId,
+			address: sendBlock.from,
+			balance: remainingDecimal,
+			previous: fromTokens.header,
+            link: link.result,
+            //sender: '',
+            //receiver: '',
+            message: this.zeroHash,
+            quota: 0,
+            timestamp: Math.floor(new Date().getTime()/1000),
+			extra: this.zeroHash,
+			representative: accountFrom.result.representative
+        };
+        return blockData;
+    }
+
+    async generateReceiveBlock(sendBlock) {
+        const accountToFromPublicKey = await this._client.request(_account.accountForPublicKey,sendBlock.link);
+        const accountTo = await this._client.request(_ledger.accountInfo,accountToFromPublicKey.result);
+        const tokens = accountTo.result.tokens;
+		const fromTokens = Array.isArray(tokens) ? tokens.filter(tokenMeta => tokenMeta.type === sendBlock.token)[0] : null;
+        const remainingDecimal = new BigNumber(fromTokens.balance).plus(sendBlock.amount).toString(10);
+        const blockData = {
+			type: 'Receive',
+			token: sendBlock.token,
+			address: accountToFromPublicKey.result,
+			balance: remainingDecimal,
+			previous: fromTokens.header,
+            link: sendBlock.hash,
+            //sender: '',
+            //receiver: '',
+            message: this.zeroHash,
+            quota: 0,
+            timestamp: Math.floor(new Date().getTime()/1000),
+			extra: this.zeroHash,
+			representative: fromTokens.representative
+        };
+        return blockData;
+    }
+
+    async generateChangeBlock(account,representative) {
+        const accountChanging = await this._client.request(_ledger.accountInfo,account);
+        const changingTokens = accountChanging.result.tokens;
+        const token = await this._client.request(_ledger.tokenInfoByName,'QLC');
+        const changingToken = Array.isArray(changingTokens) ? changingTokens.filter(tokenMeta => tokenMeta.type === token.result.tokenId)[0] : null;
+        const balanceDecimal = new BigNumber(changingToken.balance).toString(10);
+        const blockData = {
+			type: 'Change',
+			token: token.result.tokenId,
+			address: account,
+			balance: balanceDecimal,
+			previous: changingToken.header,
+            link: this.zeroHash,
+            //sender: '',
+            //receiver: '',
+            message: this.zeroHash,
+            quota: 0,
+            timestamp: Math.floor(new Date().getTime()/1000),
+			extra: this.zeroHash,
+			representative: representative
+        };
+        return blockData;
     }
 }

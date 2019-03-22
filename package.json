@@ -123,13 +123,14 @@
     "webpack-merge": "^4.1.4"
   },
   "dependencies": {
-    "jsonrpc-lite": "^2.0.2",
-    "xhr2": "^0.1.4",
-    "websocket": "^1.0.26",
-    "net": "^1.0.2",
-    "es6-promise": "^4.2.5",
     "@types/mocha": "^5.2.5",
-    "babel-loader": "^8.0.4"
+    "babel-loader": "^8.0.4",
+    "bignumber.js": "^8.1.1",
+    "es6-promise": "^4.2.5",
+    "jsonrpc-lite": "^2.0.2",
+    "net": "^1.0.2",
+    "websocket": "^1.0.26",
+    "xhr2": "^0.1.4"
   },
   "nyc": {
     "require": [
