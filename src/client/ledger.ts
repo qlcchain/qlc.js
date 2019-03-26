@@ -71,18 +71,37 @@ export default class Ledger {
         return blockData;
     }
 
+    async getAccountInfo(account) {
+        try {
+            return await this._client.request(_ledger.accountInfo,account);
+        } catch(e) {
+            return e;
+        }
+    }
+
     async generateReceiveBlock(sendBlock) {
         const accountToFromPublicKey = await this._client.request(_account.accountForPublicKey,sendBlock.link);
-        const accountTo = await this._client.request(_ledger.accountInfo,accountToFromPublicKey.result);
-        const tokens = accountTo.result.tokens;
-		const fromTokens = Array.isArray(tokens) ? tokens.filter(tokenMeta => tokenMeta.type === sendBlock.token)[0] : null;
-        const remainingDecimal = new BigNumber(fromTokens.balance).plus(sendBlock.amount).toString(10);
+        let remainingDecimal = '0';
+        let type = 'Receive';
+        let previous = this.zeroHash;
+        const accountTo = await this.getAccountInfo(accountToFromPublicKey.result);
+        let representative = sendBlock.representative;
+        if (accountTo.result) {
+            const tokens = accountTo.result.tokens;
+            const fromTokens = Array.isArray(tokens) ? tokens.filter(tokenMeta => tokenMeta.type === sendBlock.token)[0] : null;
+            remainingDecimal = new BigNumber(fromTokens.balance).plus(sendBlock.amount).toString(10);
+            previous = fromTokens.header;
+            representative = fromTokens.representative;
+        } else {
+            type = 'Open';
+            remainingDecimal = new BigNumber(0).plus(sendBlock.amount).toString(10);
+        }
         const blockData = {
-			type: 'Receive',
+			type: type,
 			token: sendBlock.token,
 			address: accountToFromPublicKey.result,
 			balance: remainingDecimal,
-			previous: fromTokens.header,
+			previous: previous,
             link: sendBlock.hash,
             //sender: '',
             //receiver: '',
@@ -90,7 +109,7 @@ export default class Ledger {
             quota: 0,
             timestamp: Math.floor(new Date().getTime()/1000),
 			extra: this.zeroHash,
-			representative: fromTokens.representative
+			representative: representative
         };
         return blockData;
     }
