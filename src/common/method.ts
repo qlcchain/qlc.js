@@ -147,6 +147,6 @@ export type qlcclassicFun = {
   onlineRepresentatives: Function;
 };
 
-type methods = account | ledger | wallet | net | util | qlcclassic;
+type methods = account | ledger | mintage | sms | wallet | net | util | qlcclassic;
 
 export default methods;
