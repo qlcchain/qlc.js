@@ -78,7 +78,7 @@ export const enum mintage {
 
 export const enum sms {
   phoneBlocks = 'sms_phoneBlocks',
-  messageBlock = 'sms_messageBlock',
+  messageBlocks = 'sms_messageBlocks',
   messageHash = 'sms_messageHash',
   messageStore = 'sms_messageStore'
 }

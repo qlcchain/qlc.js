@@ -393,9 +393,9 @@ export default class Ledger {
             return e;
         }
     }
-    async messageBlock(messageHash) {
+    async messageBlocks(messageHash) {
         try {
-            return await this._client.request(_sms.messageBlock,messageHash);
+            return await this._client.request(_sms.messageBlocks,messageHash);
         } catch(e) {
             return e;
         }
