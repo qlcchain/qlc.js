@@ -311,9 +311,15 @@ export default class Ledger {
         if (accountTo.result) {
             const tokens = accountTo.result.tokens;
             const fromTokens = Array.isArray(tokens) ? tokens.filter(tokenMeta => tokenMeta.type === sendBlock.token)[0] : null;
-            remainingDecimal = new BigNumber(fromTokens.balance).plus(sendBlock.amount).toString(10);
-            previous = fromTokens.header;
-            representative = fromTokens.representative;
+            if (fromTokens) {
+                remainingDecimal = new BigNumber(fromTokens.balance).plus(sendBlock.amount).toString(10);
+                previous = fromTokens.header;
+                representative = fromTokens.representative;
+            } else {
+                type = 'Open';
+                remainingDecimal = new BigNumber(0).plus(sendBlock.amount).toString(10);
+            }
+            
         } else {
             type = 'Open';
             remainingDecimal = new BigNumber(0).plus(sendBlock.amount).toString(10);
