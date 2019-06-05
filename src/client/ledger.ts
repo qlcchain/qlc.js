@@ -283,7 +283,8 @@ export default class Ledger {
 		const fromTokens = Array.isArray(tokens) ? tokens.filter(tokenMeta => tokenMeta.type === token.result.tokenId)[0] : null;
         const link = await this.accountPublicKey(sendBlock.to);
         const remainingDecimal = new BigNumber(fromTokens.balance).minus(sendBlock.amount).toString(10);
-        const preBlock = await this.blocksInfo(fromTokens.header);
+        const preBlockResult = await this.blocksInfo([fromTokens.header]);
+        const preBlock = preBlockResult.result[0];
         const blockData = {
 			type: 'Send',
 			token: token.result.tokenId,
@@ -324,7 +325,8 @@ export default class Ledger {
                 remainingDecimal = new BigNumber(fromTokens.balance).plus(sendBlock.amount).toString(10);
                 previous = fromTokens.header;
                 representative = fromTokens.representative;
-                const preBlock = await this.blocksInfo(fromTokens.header);
+                const preBlockResult = await this.blocksInfo([fromTokens.header]);
+                const preBlock = preBlockResult.result[0];
                 vote = preBlock.vote;
                 network = preBlock.network;
                 storage = preBlock.storage;
@@ -374,7 +376,8 @@ export default class Ledger {
         const token = await this.tokenInfoByName('QLC');
         const changingToken = Array.isArray(changingTokens) ? changingTokens.filter(tokenMeta => tokenMeta.type === token.result.tokenId)[0] : null;
         const balanceDecimal = new BigNumber(changingToken.balance).toString(10);
-        const preBlock = await this.blocksInfo(changingToken.header);
+        const preBlockResult = await this.blocksInfo([changingToken.header]);
+        const preBlock = preBlockResult.result[0];
         const blockData = {
 			type: 'Change',
 			token: token.result.tokenId,
