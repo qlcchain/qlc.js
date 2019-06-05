@@ -283,6 +283,7 @@ export default class Ledger {
 		const fromTokens = Array.isArray(tokens) ? tokens.filter(tokenMeta => tokenMeta.type === token.result.tokenId)[0] : null;
         const link = await this.accountPublicKey(sendBlock.to);
         const remainingDecimal = new BigNumber(fromTokens.balance).minus(sendBlock.amount).toString(10);
+        const preBlock = await this.blocksInfo(fromTokens.header);
         const blockData = {
 			type: 'Send',
 			token: token.result.tokenId,
@@ -290,10 +291,14 @@ export default class Ledger {
 			balance: remainingDecimal,
 			previous: fromTokens.header,
             link: link.result,
-            //sender: '',
-            //receiver: '',
+            sender: '',
+            receiver: '',
             message: this.zeroHash,
-            quota: 0,
+            poVHeight: 0,
+            vote: preBlock.vote,
+            network: preBlock.network,
+            storage: preBlock.storage,
+            oracle: preBlock.oracle,
             timestamp: Math.floor(new Date().getTime()/1000),
 			extra: this.zeroHash,
 			representative: accountFrom.result.representative
@@ -304,6 +309,10 @@ export default class Ledger {
     async generateReceiveBlock(sendBlock) {
         const accountToFromPublicKey = await this.accountForPublicKey(sendBlock.link);
         let remainingDecimal = '0';
+        let vote = '0';
+        let network = '0';
+        let storage = '0';
+        let oracle = '0';
         let type = 'Receive';
         let previous = this.zeroHash;
         const accountTo = await this.accountInfo(accountToFromPublicKey.result);
@@ -315,14 +324,27 @@ export default class Ledger {
                 remainingDecimal = new BigNumber(fromTokens.balance).plus(sendBlock.amount).toString(10);
                 previous = fromTokens.header;
                 representative = fromTokens.representative;
+                const preBlock = await this.blocksInfo(fromTokens.header);
+                vote = preBlock.vote;
+                network = preBlock.network;
+                storage = preBlock.storage;
+                oracle = preBlock.oracle;
             } else {
                 type = 'Open';
                 remainingDecimal = new BigNumber(0).plus(sendBlock.amount).toString(10);
+                vote = new BigNumber(0).toString(10);
+                network = new BigNumber(0).toString(10);
+                storage = new BigNumber(0).toString(10);
+                oracle = new BigNumber(0).toString(10);
             }
             
         } else {
             type = 'Open';
             remainingDecimal = new BigNumber(0).plus(sendBlock.amount).toString(10);
+            vote = new BigNumber(0).toString(10);
+            network = new BigNumber(0).toString(10);
+            storage = new BigNumber(0).toString(10);
+            oracle = new BigNumber(0).toString(10);
         }
         const blockData = {
 			type: type,
@@ -334,7 +356,11 @@ export default class Ledger {
             //sender: '',
             //receiver: '',
             message: this.zeroHash,
-            quota: 0,
+            poVHeight: 0,
+            vote: vote,
+            network: network,
+            storage: storage,
+            oracle: oracle,
             timestamp: Math.floor(new Date().getTime()/1000),
 			extra: this.zeroHash,
 			representative: representative
@@ -348,6 +374,7 @@ export default class Ledger {
         const token = await this.tokenInfoByName('QLC');
         const changingToken = Array.isArray(changingTokens) ? changingTokens.filter(tokenMeta => tokenMeta.type === token.result.tokenId)[0] : null;
         const balanceDecimal = new BigNumber(changingToken.balance).toString(10);
+        const preBlock = await this.blocksInfo(changingToken.header);
         const blockData = {
 			type: 'Change',
 			token: token.result.tokenId,
@@ -358,7 +385,11 @@ export default class Ledger {
             //sender: '',
             //receiver: '',
             message: this.zeroHash,
-            quota: 0,
+            poVHeight: 0,
+            vote: preBlock.vote,
+            network: preBlock.network,
+            storage: preBlock.storage,
+            oracle: preBlock.oracle,
             timestamp: Math.floor(new Date().getTime()/1000),
 			extra: this.zeroHash,
 			representative: representative
