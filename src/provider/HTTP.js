@@ -101,7 +101,7 @@ class HTTP_RPC extends Communication {
         });
     }
 
-    request(methodName, params) {
+    async request(methodName, params) {
         let requestObj = this._getRequestPayload(methodName, params);
 
         if (requestObj instanceof Error) {
@@ -114,8 +114,8 @@ class HTTP_RPC extends Communication {
             }
 
             return {
-                result: res.result || null,
-                error: res.error || null
+                result: (typeof res.result !== 'undefined') ? res : null,
+                error: (typeof res.error !== 'undefined') ? res.error.message : null
             };
         });
     }
